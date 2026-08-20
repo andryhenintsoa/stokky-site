@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="fr" class="lang-fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stokky — l'inventaire de votre maison</title>
+<meta name="description" content="Un inventaire maison qui reproduit votre logement : vos pièces, vos meubles, les emplacements précis à l'intérieur. Quantités, seuils, dates de péremption, liste de courses partagée.">
+<meta name="theme-color" content="#FBF4EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1E1410" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stokky — l'inventaire de votre maison">
+<meta property="og:description" content="Stokky sait ce que vous avez chez vous, et surtout où.">
+<meta property="og:image" content="assets/icon.png">
+<style>
+/* ---------------------------------------------------------------- fonts */
+@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/nunito-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/nunito-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(assets/fonts/nunito-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(assets/fonts/nunito-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(assets/fonts/nunito-800-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(assets/fonts/nunito-800-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+
+/* --------------------------------------------------------------- tokens */
+:root{
+--terracotta-700:#A5522A;--terracotta-500:#C4683A;--terracotta-100:#F7EDE5;
+--cream-50:#FFFFFF;--cream-100:#FBF4EA;--cream-200:#F7EFE3;--cream-300:#EDE0D4;--cream-400:#E3D6C8;--cream-500:#C8B49F;--cream-600:#A99483;--brown-400:#9B7E6E;--brown-900:#3A2318;
+--amber-500:#D4922A;--amber-700:#B37B18;--amber-100:#FBF0DD;
+--green-500:#5C9E68;--green-700:#4A8555;--green-100:#E9F3EB;
+--red-500:#C83C4A;--red-100:#FAECEE;
+
+--primary:var(--terracotta-500);--primary-hover:var(--terracotta-700);--on-primary:#FFFFFF;--primary-container:var(--terracotta-100);--on-primary-container:var(--terracotta-500);
+--secondary-container:var(--amber-100);--on-secondary-container:var(--amber-700);
+--tertiary-container:var(--green-100);--on-tertiary-container:var(--green-700);
+--error-container:var(--red-100);--on-error-container:var(--red-500);
+--surface:var(--cream-100);--surface-container-lowest:var(--cream-50);--surface-container-low:var(--cream-200);
+--on-surface:var(--brown-900);--on-surface-variant:var(--brown-400);
+--outline-variant:var(--cream-300);
+--shadow-color:90 40 10;
+--disabled-container:var(--cream-400);--on-disabled:var(--cream-600);
+
+--text-body:var(--on-surface);--text-muted:var(--on-surface-variant);--text-link:var(--primary);
+--surface-field:var(--surface-container-low);--surface-page:var(--surface);
+--border-hairline:var(--outline-variant);
+
+--font-sans:'Nunito',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+--font-weight-bold:700;--font-weight-black:800;
+--title-large-size:22px;--title-medium-size:18px;--title-small-size:16px;
+--body-medium-size:14px;--body-small-size:13px;
+--label-large-size:14px;--label-medium-size:12px;--label-medium-tracking:0.6px;
+
+--space-sm:8px;--space-md:12px;--space-lg:16px;--space-xl:20px;--space-xxl:24px;--space-xxxl:32px;
+--radius-md:12px;--radius-lg:14px;--radius-xl:16px;--radius-full:999px;
+--shadow-card:0 2px 8px rgb(var(--shadow-color) / 0.06);
+--shadow-raised:0 4px 14px rgb(var(--shadow-color) / 0.10);
+--shadow-float:0 18px 40px rgb(var(--shadow-color) / 0.14);
+--ease-out:cubic-bezier(0.22,1,0.36,1);
+--duration-fast:150ms;--duration-base:250ms;--duration-slow:350ms;
+--transition-base:all var(--duration-base) var(--ease-out);
+--header-bg:rgb(255 255 255 / 0.72);
+--glow-a:rgb(196 104 58 / 0.20);--glow-b:rgb(212 146 42 / 0.16);--glow-c:rgb(92 158 104 / 0.12);
+}
+@media (prefers-color-scheme:dark){
+:root{
+--primary:#C4683A;--primary-hover:#D97C4C;--on-primary:#FFFFFF;--primary-container:#4A2515;--on-primary-container:#F5E6D8;
+--secondary-container:#3B2A11;--on-secondary-container:#E9C078;
+--tertiary-container:#1F3324;--on-tertiary-container:#8FC79A;
+--error-container:#3B1519;--on-error-container:#E9909A;
+--surface:#1E1410;--surface-container-lowest:#150E0A;--surface-container-low:#251A14;
+--on-surface:#F5E6D8;--on-surface-variant:#B89A86;
+--outline-variant:#4A3028;
+--disabled-container:#332319;--on-disabled:#7A6151;
+--shadow-color:0 0 0;
+--header-bg:rgb(21 14 10 / 0.72);
+--glow-a:rgb(196 104 58 / 0.26);--glow-b:rgb(212 146 42 / 0.16);--glow-c:rgb(92 158 104 / 0.12);
+}}
+
+/* ----------------------------------------------------------------- base */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--surface-page);color:var(--text-body);font-family:var(--font-sans);font-size:var(--body-medium-size);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--text-link);text-decoration:none;font-weight:var(--font-weight-bold)}
+a:hover{color:var(--primary-hover);text-decoration:underline}
+img{max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:var(--space-xxl)}
+.eyebrow{font-size:var(--label-medium-size);font-weight:var(--font-weight-bold);letter-spacing:var(--label-medium-tracking);text-transform:uppercase;color:var(--primary)}
+.muted{color:var(--text-muted)}
+.icon{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* language switch */
+.lang-fr [data-lang="en"],.lang-en [data-lang="fr"]{display:none}
+
+/* --------------------------------------------------------------- header */
+header{position:sticky;top:0;z-index:20;background:var(--header-bg);-webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid transparent;transition:border-color var(--duration-base) var(--ease-out),box-shadow var(--duration-base) var(--ease-out)}
+header.scrolled{border-bottom-color:var(--border-hairline);box-shadow:0 6px 20px rgb(var(--shadow-color) / 0.05)}
+.bar{display:flex;align-items:center;gap:var(--space-lg);height:56px}
+.brand{display:flex;align-items:center;gap:var(--space-sm);margin-right:auto}
+.brand img{width:32px;height:32px;border-radius:var(--radius-md);display:block;transition:transform var(--duration-slow) var(--ease-out)}
+.brand:hover img{transform:rotate(-6deg) scale(1.08)}
+.brand span{font-size:var(--title-large-size);font-weight:var(--font-weight-black);color:var(--primary)}
+.langs{position:relative;display:flex;align-items:center;gap:4px;padding:3px;border-radius:var(--radius-full);background:var(--surface-field)}
+.langs .thumb{position:absolute;top:3px;left:3px;width:calc(50% - 3px);height:calc(100% - 6px);border-radius:var(--radius-full);background:var(--primary);transition:transform var(--duration-base) var(--ease-out)}
+.lang-en .langs .thumb{transform:translateX(100%)}
+.langs button{position:relative;z-index:1;border:0;cursor:pointer;padding:6px 14px;border-radius:var(--radius-full);background:none;font-family:inherit;font-size:var(--label-medium-size);font-weight:var(--font-weight-bold);color:var(--text-muted);transition:color var(--duration-base) var(--ease-out)}
+.lang-fr .langs button[data-set="fr"],.lang-en .langs button[data-set="en"]{color:var(--on-primary)}
+#progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--primary),var(--amber-500));will-change:transform}
+
+/* ----------------------------------------------------------------- hero */
+.hero{position:relative;padding-block:64px 48px}
+.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:48px;align-items:center}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-xxl)}
+h1{margin:0;font-size:clamp(32px,4.4vw,52px);font-weight:var(--font-weight-black);line-height:1.1;text-wrap:pretty}
+.hero p{margin:0;max-width:46ch;font-size:17px;line-height:1.55;color:var(--text-muted)}
+.mark{position:relative;white-space:nowrap}
+.mark::after{content:"";position:absolute;left:-2px;right:-2px;bottom:.04em;height:.34em;border-radius:var(--radius-full);background:linear-gradient(90deg,var(--glow-a),var(--glow-b));z-index:-1;transform:scaleX(0);transform-origin:0 50%;transition:transform 700ms var(--ease-out) 350ms}
+.reveal.in .mark::after{transform:scaleX(1)}
+.hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-lg)}
+
+/* atmospheric glow */
+.glow{position:absolute;inset:-10% -20% auto;height:760px;pointer-events:none;z-index:-2;overflow:hidden}
+.glow i{position:absolute;display:block;border-radius:50%;filter:blur(70px);opacity:.9;will-change:transform}
+.glow i:nth-child(1){width:520px;height:520px;left:2%;top:-120px;background:var(--glow-a);animation:drift1 22s var(--ease-out) infinite alternate}
+.glow i:nth-child(2){width:420px;height:420px;right:8%;top:40px;background:var(--glow-b);animation:drift2 26s var(--ease-out) infinite alternate}
+.glow i:nth-child(3){width:360px;height:360px;left:38%;top:280px;background:var(--glow-c);animation:drift3 30s var(--ease-out) infinite alternate}
+@keyframes drift1{to{transform:translate3d(60px,50px,0) scale(1.12)}}
+@keyframes drift2{to{transform:translate3d(-70px,40px,0) scale(1.08)}}
+@keyframes drift3{to{transform:translate3d(40px,-50px,0) scale(1.15)}}
+
+/* --------------------------------------------------------------- pieces */
+.btn{display:inline-flex;align-items:center;gap:var(--space-sm);height:44px;padding-inline:var(--space-xl);border:0;border-radius:var(--radius-lg);font-family:inherit;font-size:var(--label-large-size);font-weight:var(--font-weight-bold);background:var(--disabled-container);color:var(--on-disabled);cursor:not-allowed}
+.btn .icon{width:20px;height:20px}
+.badge{display:inline-flex;align-items:center;height:26px;padding-inline:var(--space-md);border-radius:var(--radius-full);font-size:var(--label-medium-size);font-weight:var(--font-weight-bold)}
+.badge.warning{background:var(--secondary-container);color:var(--on-secondary-container)}
+.badge.success{background:var(--tertiary-container);color:var(--on-tertiary-container)}
+.badge.error{background:var(--error-container);color:var(--on-error-container)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--space-sm)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding-inline:var(--space-md);border-radius:var(--radius-full);background:var(--surface-container-lowest);border:1px solid var(--border-hairline);font-size:var(--body-small-size);font-weight:var(--font-weight-bold);box-shadow:var(--shadow-card);transition:transform var(--duration-base) var(--ease-out),box-shadow var(--duration-base) var(--ease-out)}
+.chip:hover{transform:translateY(-3px) rotate(-1.5deg);box-shadow:var(--shadow-raised)}
+.chip b{font-size:15px;font-weight:400}
+
+.card{background:var(--surface-container-lowest);border-radius:var(--radius-xl);padding:var(--space-xl);box-shadow:var(--shadow-card);border:1px solid transparent;display:flex;flex-direction:column;gap:var(--space-md);transition:transform var(--duration-base) var(--ease-out),box-shadow var(--duration-base) var(--ease-out),border-color var(--duration-base) var(--ease-out)}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-raised);border-color:var(--border-hairline)}
+.card .icon{color:var(--primary)}
+.card h3{margin:0;font-size:var(--title-small-size);font-weight:var(--font-weight-bold)}
+.card p{margin:0;font-size:var(--body-medium-size);color:var(--text-muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space-md)}
+
+/* phone mockups */
+.shot{display:flex;justify-content:center;perspective:1400px}
+.phone{position:relative;width:320px;max-width:100%;border-radius:28px;overflow:hidden;background:var(--surface-container-lowest);box-shadow:var(--shadow-float);border:1px solid var(--border-hairline);transform:rotateY(var(--ry,-7deg)) rotateX(3deg) translateY(var(--py,0));transition:transform var(--duration-slow) var(--ease-out),box-shadow var(--duration-slow) var(--ease-out);will-change:transform}
+.phone.flip{--ry:7deg}
+.phone:hover{transform:rotateY(0) rotateX(0) translateY(calc(var(--py,0px) - 6px)) scale(1.02)}
+.phone img{width:100%;display:block}
+.phone::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgb(255 255 255 / 0.22) 0%,rgb(255 255 255 / 0) 42%);pointer-events:none}
+.feature{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:48px;align-items:center;padding-block:var(--space-xxl)}
+.feature .copy{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-lg)}
+.feature h3{margin:0;font-size:clamp(22px,2.4vw,28px);font-weight:var(--font-weight-black);line-height:1.15}
+.feature p{margin:0;max-width:44ch;font-size:15px;line-height:1.55;color:var(--text-muted)}
+.feature .shot{width:300px;margin-inline:auto}
+.feature .phone{width:300px}
+
+/* values band */
+.band{position:relative;background:var(--surface-container-lowest);border-block:1px solid var(--border-hairline);margin-top:var(--space-xxxl);overflow:hidden}
+.values{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-xxxl);padding-block:64px}
+.value{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-md)}
+.value .icon{color:var(--primary)}
+.value h3{margin:0;font-size:var(--title-medium-size);font-weight:var(--font-weight-bold)}
+.value p{margin:0;font-size:var(--body-medium-size);color:var(--text-muted)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-md);padding-bottom:64px}
+.stat{background:var(--surface-page);border-radius:var(--radius-xl);border:1px solid var(--border-hairline);padding:var(--space-lg);min-height:120px;display:flex;flex-direction:column;gap:var(--space-sm);transition:transform var(--duration-base) var(--ease-out),box-shadow var(--duration-base) var(--ease-out)}
+.stat:hover{transform:translateY(-4px);box-shadow:var(--shadow-raised)}
+.stat .tile{display:grid;place-items:center;width:36px;height:36px;border-radius:var(--radius-md);background:var(--tertiary-container);color:var(--on-tertiary-container)}
+.stat.neutral .tile{background:var(--primary-container);color:var(--on-primary-container)}
+.stat .n{font-size:32px;font-weight:var(--font-weight-black);line-height:1.1;font-variant-numeric:tabular-nums}
+.stat .l{font-size:var(--body-small-size);color:var(--text-muted);font-weight:var(--font-weight-bold)}
+
+/* closing + footer */
+.closing{display:flex;flex-direction:column;align-items:center;gap:var(--space-xl);text-align:center;padding-block:72px}
+h2{margin:0;font-size:clamp(24px,3vw,32px);font-weight:var(--font-weight-black);line-height:1.15;max-width:34ch}
+.closing p{margin:0;max-width:46ch;font-size:15px;line-height:1.55;color:var(--text-muted)}
+footer{border-top:1px solid var(--border-hairline);background:var(--surface-container-lowest)}
+.foot{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-lg);padding-block:var(--space-xxxl)}
+.foot .brand{gap:var(--space-sm)}
+.foot .brand img{width:24px;height:24px}
+.foot .brand span{font-size:var(--label-large-size);font-weight:var(--font-weight-bold);color:var(--text-muted)}
+
+/* -------------------------------------------------------------- motion */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 620ms var(--ease-out),transform 620ms var(--ease-out);transition-delay:calc(var(--i,0) * 90ms)}
+.reveal.in{opacity:1;transform:none}
+.pop{opacity:0;transform:translateY(10px) scale(.94);transition:opacity 420ms var(--ease-out),transform 420ms var(--ease-out);transition-delay:calc(var(--i,0) * 70ms)}
+.pop.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+.reveal,.pop{opacity:1;transform:none;transition:none}
+.glow i{animation:none}
+.phone{transform:none}
+.phone:hover{transform:none}
+.mark::after{transform:scaleX(1);transition:none}
+#progress{display:none}
+}
+@media (max-width:720px){
+.wrap{padding-inline:var(--space-lg)}
+.hero{padding-block:40px 32px}
+.phone,.feature .phone{transform:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-cart"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2.5 3h2.6l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.55L21 8H6.2"/></g>
+    <g id="i-clock"><circle cx="12" cy="12" r="9"/><path d="M12 6.8V12l3.4 2.2"/></g>
+    <g id="i-group"><circle cx="9" cy="8.5" r="3.3"/><path d="M2.8 19.6a6.4 6.4 0 0 1 12.4 0"/><path d="M16.4 6.2a3.1 3.1 0 0 1 0 5.8M17.6 14.4a5.6 5.6 0 0 1 3.6 5.2"/></g>
+    <g id="i-download"><path d="M12 3.5v11M7.6 10.4 12 14.8l4.4-4.4M4 17.4v1.6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1.6"/></g>
+    <g id="i-shield"><path d="M12 3 4.6 6v6c0 4.4 3 7.7 7.4 9 4.4-1.3 7.4-4.6 7.4-9V6z"/><path d="m8.8 12.2 2.3 2.3 4.1-4.6"/></g>
+    <g id="i-hexagon"><path d="M12 2.8 20 7.4v9.2L12 21.2 4 16.6V7.4z"/></g>
+    <g id="i-label"><path d="M3.2 8.4a2 2 0 0 1 2-2h8.1a2 2 0 0 1 1.5.7l5 5.6a2 2 0 0 1 0 2.6l-5 5.6a2 2 0 0 1-1.5.7H5.2a2 2 0 0 1-2-2z"/><circle cx="7.6" cy="12" r="1.2"/></g>
+    <g id="i-category"><rect x="3.4" y="3.4" width="7" height="7" rx="2"/><rect x="13.6" y="3.4" width="7" height="7" rx="2"/><rect x="3.4" y="13.6" width="7" height="7" rx="2"/><rect x="13.6" y="13.6" width="7" height="7" rx="2"/></g>
+    <g id="i-pin"><path d="M12 21.4s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10.2" r="2.6"/></g>
+    <g id="i-scan"><path d="M4 8.4V6a2 2 0 0 1 2-2h2.4M15.6 4H18a2 2 0 0 1 2 2v2.4M20 15.6V18a2 2 0 0 1-2 2h-2.4M8.4 20H6a2 2 0 0 1-2-2v-2.4"/><path d="M7.4 12h9.2"/></g>
+  </defs>
+</svg>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="Stokky">
+      <img src="assets/icon.png" alt="" width="32" height="32">
+      <span>Stokky</span>
+    </a>
+    <div class="langs" role="group" aria-label="Langue / Language">
+      <span class="thumb" aria-hidden="true"></span>
+      <button type="button" data-set="fr">FR</button>
+      <button type="button" data-set="en">EN</button>
+    </div>
+  </div>
+  <div id="progress"></div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="glow" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="badge warning reveal"><span data-lang="fr">Bientôt disponible</span><span data-lang="en">Coming soon</span></span>
+        <h1 class="reveal" style="--i:1">
+          <span data-lang="fr">Stokky sait ce que vous avez chez vous, et surtout <span class="mark">où</span>.</span>
+          <span data-lang="en">Stokky knows what you have at home, and more importantly, <span class="mark">where</span>.</span>
+        </h1>
+        <p class="reveal" style="--i:2">
+          <span data-lang="fr">Un inventaire maison qui reproduit votre logement : vos pièces, vos meubles, les emplacements précis à l'intérieur. Quantités, seuils, dates de péremption, liste de courses partagée.</span>
+          <span data-lang="en">A home inventory that mirrors your home: your rooms, your furniture, the exact spots inside them. Quantities, thresholds, expiry dates, a shared shopping list.</span>
+        </p>
+        <div class="hero-cta reveal" style="--i:3">
+          <button class="btn" type="button" disabled>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg>
+            <span data-lang="fr">Bientôt sur Android et iOS</span><span data-lang="en">Coming to Android and iOS</span>
+          </button>
+          <span class="muted" style="font-size:var(--body-small-size)">
+            <span data-lang="fr">Français et anglais · sans pub</span><span data-lang="en">French and English · no ads</span>
+          </span>
+        </div>
+        <div class="chips">
+          <span class="chip pop" style="--i:0"><b>🥛</b><span data-lang="fr">Laitier</span><span data-lang="en">Dairy</span></span>
+          <span class="chip pop" style="--i:1"><b>🥦</b><span data-lang="fr">Légumes</span><span data-lang="en">Veg</span></span>
+          <span class="chip pop" style="--i:2"><b>🧊</b><span data-lang="fr">Congelé</span><span data-lang="en">Frozen</span></span>
+          <span class="chip pop" style="--i:3"><b>🧴</b><span data-lang="fr">Entretien</span><span data-lang="en">Household</span></span>
+        </div>
+      </div>
+      <div class="shot reveal" style="--i:2">
+        <div class="phone" data-parallax="0.05">
+          <img src="assets/shots/dashboard.png" alt="Tableau de bord Stokky" width="320" height="694" loading="eager">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-block:var(--space-xxxl) 48px">
+    <div class="eyebrow reveal" style="margin-bottom:var(--space-md)">
+      <span data-lang="fr">Ce que ça change</span><span data-lang="en">What changes</span>
+    </div>
+    <h2 class="reveal" style="--i:1;margin-bottom:var(--space-xxxl)">
+      <span data-lang="fr">La plupart des applications d'inventaire vous donnent une liste.</span>
+      <span data-lang="en">Most inventory apps just hand you a list.</span>
+    </h2>
+    <div class="cards">
+      <div class="card reveal" style="--i:0">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cart"/></svg>
+        <h3><span data-lang="fr">Plus de double achat</span><span data-lang="en">No more buying a second one</span></h3>
+        <p><span data-lang="fr">Un coup d'œil avant de partir en courses suffit.</span><span data-lang="en">A glance before you leave is enough.</span></p>
+      </div>
+      <div class="card reveal" style="--i:1">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg>
+        <h3><span data-lang="fr">Plus de découverte trop tardive</span><span data-lang="en">Nothing found a month too late</span></h3>
+        <p><span data-lang="fr">Stokky prévient avant la date de péremption, pas après.</span><span data-lang="en">Stokky warns you before the expiry date, not after.</span></p>
+      </div>
+      <div class="card reveal" style="--i:2">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-group"/></svg>
+        <h3><span data-lang="fr">Plus de « on en a encore ? »</span><span data-lang="en">No more "do we still have any?"</span></h3>
+        <p><span data-lang="fr">Au téléphone, au milieu du magasin.</span><span data-lang="en">Phoned in from the middle of the shop.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-block:var(--space-xxxl)">
+
+    <div class="feature">
+      <div class="copy reveal">
+        <div class="eyebrow"><span data-lang="fr">Scanner</span><span data-lang="en">Scanning</span></div>
+        <h3><span data-lang="fr">Scannez, rangez, c'est fait</span><span data-lang="en">Scan, place, done</span></h3>
+        <p><span data-lang="fr">Scannez un code-barres : le nom et la catégorie du produit sont récupérés automatiquement. Indiquez la quantité et l'emplacement, ajoutez une photo si vous voulez. C'est tout.</span><span data-lang="en">Scan a barcode and the product name and category are filled in for you. Set the quantity and the spot, add a photo if you like. That's the whole flow.</span></p>
+      </div>
+      <div class="shot reveal" style="--i:1">
+        <div class="phone" data-parallax="0.04"><img src="assets/shots/scan.png" alt="Scan d'un code-barres" width="300" height="651" loading="lazy"></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot reveal">
+        <div class="phone flip" data-parallax="0.04"><img src="assets/shots/locations.png" alt="Mes emplacements" width="300" height="651" loading="lazy"></div>
+      </div>
+      <div class="copy reveal" style="--i:1">
+        <div class="eyebrow"><span data-lang="fr">Emplacements</span><span data-lang="en">Locations</span></div>
+        <h3><span data-lang="fr">Votre logement, tel qu'il est</span><span data-lang="en">Your home, as it actually is</span></h3>
+        <p><span data-lang="fr">Créez vos pièces, vos meubles et vos emplacements. Prenez une photo d'un meuble et délimitez ses zones directement dessus. Un déplacement d'article se fait en deux gestes et reste dans l'historique.</span><span data-lang="en">Create your rooms, furniture and storage spots. Photograph a piece of furniture and mark out its zones directly on the picture. Moving an item takes two taps and stays in the history.</span></p>
+        <p class="muted" style="display:flex;align-items:center;gap:6px;font-size:var(--body-small-size)">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px" aria-hidden="true"><use href="#i-pin"/></svg>
+          Cuisine · placard du haut à gauche · 2 sur 6
+        </p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="copy reveal">
+        <div class="eyebrow"><span data-lang="fr">Alertes</span><span data-lang="en">Alerts</span></div>
+        <h3><span data-lang="fr">Ce qui manque, ce qui va tourner</span><span data-lang="en">What's running out, what's turning</span></h3>
+        <p><span data-lang="fr">Définissez un seuil minimum par produit. Stokky signale ce qui manque et ce qui approche de sa date de péremption, sur un tableau de bord unique. Ce qui passe sous son seuil arrive automatiquement dans la liste de courses.</span><span data-lang="en">Set a minimum threshold per product. Stokky surfaces what is running out and what is nearing its expiry date, on a single dashboard. Anything below its threshold lands on the shopping list automatically.</span></p>
+        <div class="chips">
+          <span class="badge warning pop" style="--i:0"><span data-lang="fr">Bientôt périmé</span><span data-lang="en">Expiring soon</span></span>
+          <span class="badge success pop" style="--i:1"><span data-lang="fr">En stock</span><span data-lang="en">In stock</span></span>
+          <span class="badge error pop" style="--i:2"><span data-lang="fr">Périmé</span><span data-lang="en">Expired</span></span>
+        </div>
+      </div>
+      <div class="shot reveal" style="--i:1">
+        <div class="phone" data-parallax="0.04"><img src="assets/shots/add-stock.png" alt="Ajouter du stock" width="300" height="651" loading="lazy"></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot reveal">
+        <div class="phone flip" data-parallax="0.04"><img src="assets/shots/shopping.png" alt="Liste de courses" width="300" height="651" loading="lazy"></div>
+      </div>
+      <div class="copy reveal" style="--i:1">
+        <div class="eyebrow"><span data-lang="fr">Courses</span><span data-lang="en">Shopping</span></div>
+        <h3><span data-lang="fr">Une liste qui se remplit seule</span><span data-lang="en">A list that fills itself</span></h3>
+        <p><span data-lang="fr">Ajoutez le reste à la main, cochez au fur et à mesure. Tout le foyer voit la même liste, mise à jour en temps réel.</span><span data-lang="en">Add the rest by hand and tick things off as you go. The whole household sees the same list, updated live.</span></p>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="band">
+    <div class="wrap values">
+      <div class="value reveal">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-group"/></svg>
+        <h3><span data-lang="fr">À plusieurs</span><span data-lang="en">Together</span></h3>
+        <p><span data-lang="fr">Invitez les personnes de votre foyer. Tout le monde voit le même inventaire, mis à jour en temps réel. L'historique indique qui a fait quoi.</span><span data-lang="en">Invite the people you live with. Everyone sees the same inventory, updated live. The history shows who did what.</span></p>
+      </div>
+      <div class="value reveal" style="--i:1">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>
+        <h3><span data-lang="fr">Sans compte, sans réseau</span><span data-lang="en">No account, no signal</span></h3>
+        <p><span data-lang="fr">Stokky démarre immédiatement, sans inscription. Vos données restent sur votre appareil tant que vous ne créez pas de compte. L'application fonctionne hors ligne et se synchronise quand la connexion revient.</span><span data-lang="en">Stokky starts straight away, no sign-up. Your data stays on your device until you choose to create an account. It works offline and syncs when the connection comes back.</span></p>
+      </div>
+      <div class="value reveal" style="--i:2">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg>
+        <h3><span data-lang="fr">Respectueux de vos données</span><span data-lang="en">Respectful of your data</span></h3>
+        <p><span data-lang="fr">Aucune publicité. Aucun outil de mesure d'audience. Aucun traceur. Nous ne vendons rien à personne. L'appareil photo sert uniquement à scanner un code-barres et à prendre vos photos.</span><span data-lang="en">No ads. No analytics. No trackers. We sell nothing to anyone. The camera is used only to scan barcodes and take your own photos.</span></p>
+      </div>
+    </div>
+    <div class="wrap stats">
+      <div class="stat reveal" style="--i:0">
+        <span class="tile"><svg class="icon" viewBox="0 0 24 24" style="width:20px;height:20px" aria-hidden="true"><use href="#i-hexagon"/></svg></span>
+        <span class="n" data-count="0">0</span>
+        <span class="l"><span data-lang="fr">Publicités</span><span data-lang="en">Ads</span></span>
+      </div>
+      <div class="stat reveal" style="--i:1">
+        <span class="tile"><svg class="icon" viewBox="0 0 24 24" style="width:20px;height:20px" aria-hidden="true"><use href="#i-label"/></svg></span>
+        <span class="n" data-count="0">0</span>
+        <span class="l"><span data-lang="fr">Traceurs</span><span data-lang="en">Trackers</span></span>
+      </div>
+      <div class="stat reveal" style="--i:2">
+        <span class="tile"><svg class="icon" viewBox="0 0 24 24" style="width:20px;height:20px" aria-hidden="true"><use href="#i-download"/></svg></span>
+        <span class="n" data-count="0">0</span>
+        <span class="l"><span data-lang="fr">Revente de données</span><span data-lang="en">Data resold</span></span>
+      </div>
+      <div class="stat neutral reveal" style="--i:3">
+        <span class="tile"><svg class="icon" viewBox="0 0 24 24" style="width:20px;height:20px" aria-hidden="true"><use href="#i-category"/></svg></span>
+        <span class="n" data-count="2">0</span>
+        <span class="l"><span data-lang="fr">Langues</span><span data-lang="en">Languages</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap closing">
+    <h2 class="reveal"><span data-lang="fr">Vous ne cherchez plus, vous savez.</span><span data-lang="en">You stop searching and start knowing.</span></h2>
+    <p class="reveal" style="--i:1"><span data-lang="fr">Stokky arrive bientôt sur Android et iOS, en français et en anglais.</span><span data-lang="en">Stokky is coming soon to Android and iOS, in French and English.</span></p>
+    <button class="btn reveal" style="--i:2" type="button" disabled>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg>
+      <span data-lang="fr">Bientôt disponible</span><span data-lang="en">Coming soon</span>
+    </button>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="brand">
+      <img src="assets/icon.png" alt="" width="24" height="24">
+      <span>Stokky · 2026</span>
+    </span>
+    <a href="https://andryhenintsoa.github.io/stokky-legal/"><span data-lang="fr">Confidentialité</span><span data-lang="en">Privacy</span></a>
+    <a href="mailto:andryhenintsoa@outlook.com">andryhenintsoa@outlook.com</a>
+    <span class="muted" style="font-size:var(--body-small-size)">
+      <span data-lang="fr">Données produits : Open Food Facts</span><span data-lang="en">Product data: Open Food Facts</span>
+    </span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- language ---- */
+  function setLang(l) {
+    root.classList.toggle('lang-fr', l === 'fr');
+    root.classList.toggle('lang-en', l === 'en');
+    root.lang = l;
+    try { localStorage.setItem('stokky-lang', l); } catch (e) {}
+  }
+  var stored = null;
+  try { stored = localStorage.getItem('stokky-lang'); } catch (e) {}
+  setLang(stored || ((navigator.language || 'fr').slice(0, 2) === 'en' ? 'en' : 'fr'));
+  document.querySelectorAll('.langs button').forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.dataset.set); });
+  });
+
+  /* ---- reveal on scroll ---- */
+  var animated = document.querySelectorAll('.reveal, .pop');
+  if (reduce || !('IntersectionObserver' in window)) {
+    animated.forEach(function (el) { el.classList.add('in'); });
+    document.querySelectorAll('.n[data-count]').forEach(function (el) { el.textContent = el.dataset.count; });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+        var n = e.target.querySelector('.n[data-count]');
+        if (n) countUp(n);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.15 });
+    animated.forEach(function (el) { io.observe(el); });
+  }
+
+  function countUp(el) {
+    var target = parseInt(el.dataset.count, 10) || 0;
+    if (target === 0) { el.textContent = '0'; return; }
+    var start = performance.now(), dur = 900;
+    (function tick(now) {
+      var p = Math.min(1, (now - start) / dur);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    })(start);
+  }
+
+  /* ---- header state, scroll progress, phone parallax ---- */
+  var header = document.querySelector('header');
+  var progress = document.getElementById('progress');
+  var phones = [].slice.call(document.querySelectorAll('.phone[data-parallax]'));
+  var ticking = false;
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var y = window.scrollY;
+      header.classList.toggle('scrolled', y > 8);
+      if (progress) {
+        var max = document.body.scrollHeight - window.innerHeight;
+        progress.style.transform = 'scaleX(' + (max > 0 ? y / max : 0) + ')';
+      }
+      if (!reduce && window.innerWidth > 720) {
+        var mid = window.innerHeight / 2;
+        phones.forEach(function (p) {
+          var r = p.getBoundingClientRect();
+          if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
+          var off = (r.top + r.height / 2 - mid) * parseFloat(p.dataset.parallax);
+          p.style.setProperty('--py', (-off).toFixed(1) + 'px');
+        });
+      }
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>
