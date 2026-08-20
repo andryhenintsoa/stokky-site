@@ -7,12 +7,12 @@
 <meta name="description" content="Un inventaire maison qui reproduit votre logement : vos pièces, vos meubles, les emplacements précis à l'intérieur. Quantités, seuils, dates de péremption, liste de courses partagée.">
 <meta name="theme-color" content="#FBF4EA" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1E1410" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="assets/icon.png">
-<link rel="apple-touch-icon" href="assets/icon.png">
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Stokky — l'inventaire de votre maison">
 <meta property="og:description" content="Stokky sait ce que vous avez chez vous, et surtout où.">
-<meta property="og:image" content="assets/icon.png">
+<meta property="og:image" content="assets/favicon.png">
 <style>
 /* ---------------------------------------------------------------- fonts */
 @font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/nunito-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
@@ -59,6 +59,7 @@
 --duration-fast:150ms;--duration-base:250ms;--duration-slow:350ms;
 --transition-base:all var(--duration-base) var(--ease-out);
 --header-bg:rgb(255 255 255 / 0.72);
+--icon-plate:var(--cream-50);
 --glow-a:rgb(196 104 58 / 0.20);--glow-b:rgb(212 146 42 / 0.16);--glow-c:rgb(92 158 104 / 0.12);
 }
 @media (prefers-color-scheme:dark){
@@ -73,6 +74,7 @@
 --disabled-container:#332319;--on-disabled:#7A6151;
 --shadow-color:0 0 0;
 --header-bg:rgb(21 14 10 / 0.72);
+--icon-plate:#2C1D15;
 --glow-a:rgb(196 104 58 / 0.26);--glow-b:rgb(212 146 42 / 0.16);--glow-c:rgb(92 158 104 / 0.12);
 }}
 
@@ -90,21 +92,23 @@ img{max-width:100%}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* language switch */
-.lang-fr [data-lang="en"],.lang-en [data-lang="fr"]{display:none}
+[data-lang]{display:none}
+.lang-fr [data-lang="fr"],.lang-en [data-lang="en"],.lang-mg [data-lang="mg"]{display:inline}
 
 /* --------------------------------------------------------------- header */
 header{position:sticky;top:0;z-index:20;background:var(--header-bg);-webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid transparent;transition:border-color var(--duration-base) var(--ease-out),box-shadow var(--duration-base) var(--ease-out)}
 header.scrolled{border-bottom-color:var(--border-hairline);box-shadow:0 6px 20px rgb(var(--shadow-color) / 0.05)}
 .bar{display:flex;align-items:center;gap:var(--space-lg);height:56px}
 .brand{display:flex;align-items:center;gap:var(--space-sm);margin-right:auto}
-.brand img{width:32px;height:32px;border-radius:var(--radius-md);display:block;transition:transform var(--duration-slow) var(--ease-out)}
+.brand img{width:32px;height:32px;border-radius:var(--radius-md);display:block;background:var(--icon-plate);box-shadow:0 0 0 1px var(--border-hairline);transition:transform var(--duration-slow) var(--ease-out)}
 .brand:hover img{transform:rotate(-6deg) scale(1.08)}
 .brand span{font-size:var(--title-large-size);font-weight:var(--font-weight-black);color:var(--primary)}
-.langs{position:relative;display:flex;align-items:center;gap:4px;padding:3px;border-radius:var(--radius-full);background:var(--surface-field)}
-.langs .thumb{position:absolute;top:3px;left:3px;width:calc(50% - 3px);height:calc(100% - 6px);border-radius:var(--radius-full);background:var(--primary);transition:transform var(--duration-base) var(--ease-out)}
+.langs{position:relative;display:grid;grid-template-columns:repeat(3,minmax(44px,1fr));padding:3px;border-radius:var(--radius-full);background:var(--surface-field)}
+.langs .thumb{position:absolute;top:3px;left:3px;width:calc((100% - 6px) / 3);height:calc(100% - 6px);border-radius:var(--radius-full);background:var(--primary);transition:transform var(--duration-base) var(--ease-out)}
 .lang-en .langs .thumb{transform:translateX(100%)}
-.langs button{position:relative;z-index:1;border:0;cursor:pointer;padding:6px 14px;border-radius:var(--radius-full);background:none;font-family:inherit;font-size:var(--label-medium-size);font-weight:var(--font-weight-bold);color:var(--text-muted);transition:color var(--duration-base) var(--ease-out)}
-.lang-fr .langs button[data-set="fr"],.lang-en .langs button[data-set="en"]{color:var(--on-primary)}
+.lang-mg .langs .thumb{transform:translateX(200%)}
+.langs button{position:relative;z-index:1;border:0;cursor:pointer;padding:6px 0;border-radius:var(--radius-full);background:none;font-family:inherit;font-size:var(--label-medium-size);font-weight:var(--font-weight-bold);color:var(--text-muted);transition:color var(--duration-base) var(--ease-out)}
+.lang-fr .langs button[data-set="fr"],.lang-en .langs button[data-set="en"],.lang-mg .langs button[data-set="mg"]{color:var(--on-primary)}
 #progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--primary),var(--amber-500));will-change:transform}
 
 /* ----------------------------------------------------------------- hero */
@@ -234,6 +238,7 @@ html{scroll-behavior:auto}
       <span class="thumb" aria-hidden="true"></span>
       <button type="button" data-set="fr">FR</button>
       <button type="button" data-set="en">EN</button>
+      <button type="button" data-set="mg">MG</button>
     </div>
   </div>
   <div id="progress"></div>
@@ -245,29 +250,31 @@ html{scroll-behavior:auto}
     <div class="glow" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <span class="badge warning reveal"><span data-lang="fr">Bientôt disponible</span><span data-lang="en">Coming soon</span></span>
+        <span class="badge warning reveal"><span data-lang="fr">Bientôt disponible</span><span data-lang="en">Coming soon</span><span data-lang="mg">Ho avy tsy ho ela</span></span>
         <h1 class="reveal" style="--i:1">
           <span data-lang="fr">Stokky sait ce que vous avez chez vous, et surtout <span class="mark">où</span>.</span>
           <span data-lang="en">Stokky knows what you have at home, and more importantly, <span class="mark">where</span>.</span>
+          <span data-lang="mg">Fantatr'i Stokky izay anananao ao an-trano, ary indrindra hoe <span class="mark">aiza</span>.</span>
         </h1>
         <p class="reveal" style="--i:2">
           <span data-lang="fr">Un inventaire maison qui reproduit votre logement : vos pièces, vos meubles, les emplacements précis à l'intérieur. Quantités, seuils, dates de péremption, liste de courses partagée.</span>
           <span data-lang="en">A home inventory that mirrors your home: your rooms, your furniture, the exact spots inside them. Quantities, thresholds, expiry dates, a shared shopping list.</span>
+          <span data-lang="mg">Fitanana ny entana an-tokantrano izay maneho ny tranonao: ny efitranonao, ny fanakao, ny toerana marina ao anatiny. Isa, fetra ambany indrindra, daty fahalaniana, lisi-panjifana iombonana.</span>
         </p>
         <div class="hero-cta reveal" style="--i:3">
           <button class="btn" type="button" disabled>
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg>
-            <span data-lang="fr">Bientôt sur Android et iOS</span><span data-lang="en">Coming to Android and iOS</span>
+            <span data-lang="fr">Bientôt sur Android et iOS</span><span data-lang="en">Coming to Android and iOS</span><span data-lang="mg">Ho avy amin'ny Android sy iOS</span>
           </button>
           <span class="muted" style="font-size:var(--body-small-size)">
-            <span data-lang="fr">Français et anglais · sans pub</span><span data-lang="en">French and English · no ads</span>
+            <span data-lang="fr">Français et anglais · sans pub</span><span data-lang="en">French and English · no ads</span><span data-lang="mg">Frantsay sy anglisy · tsy misy dokambarotra</span>
           </span>
         </div>
         <div class="chips">
-          <span class="chip pop" style="--i:0"><b>🥛</b><span data-lang="fr">Laitier</span><span data-lang="en">Dairy</span></span>
-          <span class="chip pop" style="--i:1"><b>🥦</b><span data-lang="fr">Légumes</span><span data-lang="en">Veg</span></span>
-          <span class="chip pop" style="--i:2"><b>🧊</b><span data-lang="fr">Congelé</span><span data-lang="en">Frozen</span></span>
-          <span class="chip pop" style="--i:3"><b>🧴</b><span data-lang="fr">Entretien</span><span data-lang="en">Household</span></span>
+          <span class="chip pop" style="--i:0"><b>🥛</b><span data-lang="fr">Laitier</span><span data-lang="en">Dairy</span><span data-lang="mg">Ronono</span></span>
+          <span class="chip pop" style="--i:1"><b>🥦</b><span data-lang="fr">Légumes</span><span data-lang="en">Veg</span><span data-lang="mg">Legioma</span></span>
+          <span class="chip pop" style="--i:2"><b>🧊</b><span data-lang="fr">Congelé</span><span data-lang="en">Frozen</span><span data-lang="mg">Mangatsiaka</span></span>
+          <span class="chip pop" style="--i:3"><b>🧴</b><span data-lang="fr">Entretien</span><span data-lang="en">Household</span><span data-lang="mg">Fanadiovana</span></span>
         </div>
       </div>
       <div class="shot reveal" style="--i:2">
@@ -280,27 +287,28 @@ html{scroll-behavior:auto}
 
   <section class="wrap" style="padding-block:var(--space-xxxl) 48px">
     <div class="eyebrow reveal" style="margin-bottom:var(--space-md)">
-      <span data-lang="fr">Ce que ça change</span><span data-lang="en">What changes</span>
+      <span data-lang="fr">Ce que ça change</span><span data-lang="en">What changes</span><span data-lang="mg">Izay ovainy</span>
     </div>
     <h2 class="reveal" style="--i:1;margin-bottom:var(--space-xxxl)">
       <span data-lang="fr">La plupart des applications d'inventaire vous donnent une liste.</span>
       <span data-lang="en">Most inventory apps just hand you a list.</span>
+      <span data-lang="mg">Lisitra fotsiny no omen'ny ankamaroan'ny rindranasa fitanana entana.</span>
     </h2>
     <div class="cards">
       <div class="card reveal" style="--i:0">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cart"/></svg>
-        <h3><span data-lang="fr">Plus de double achat</span><span data-lang="en">No more buying a second one</span></h3>
-        <p><span data-lang="fr">Un coup d'œil avant de partir en courses suffit.</span><span data-lang="en">A glance before you leave is enough.</span></p>
+        <h3><span data-lang="fr">Plus de double achat</span><span data-lang="en">No more buying a second one</span><span data-lang="mg">Tsy mividy indroa intsony</span></h3>
+        <p><span data-lang="fr">Un coup d'œil avant de partir en courses suffit.</span><span data-lang="en">A glance before you leave is enough.</span><span data-lang="mg">Ampy ny mijery kely alohan'ny handehanana mividy.</span></p>
       </div>
       <div class="card reveal" style="--i:1">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg>
-        <h3><span data-lang="fr">Plus de découverte trop tardive</span><span data-lang="en">Nothing found a month too late</span></h3>
-        <p><span data-lang="fr">Stokky prévient avant la date de péremption, pas après.</span><span data-lang="en">Stokky warns you before the expiry date, not after.</span></p>
+        <h3><span data-lang="fr">Plus de découverte trop tardive</span><span data-lang="en">Nothing found a month too late</span><span data-lang="mg">Tsy misy hita rehefa tara loatra</span></h3>
+        <p><span data-lang="fr">Stokky prévient avant la date de péremption, pas après.</span><span data-lang="en">Stokky warns you before the expiry date, not after.</span><span data-lang="mg">Mampilaza i Stokky alohan'ny daty fahalaniana, fa tsy aorian'izay.</span></p>
       </div>
       <div class="card reveal" style="--i:2">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-group"/></svg>
-        <h3><span data-lang="fr">Plus de « on en a encore ? »</span><span data-lang="en">No more "do we still have any?"</span></h3>
-        <p><span data-lang="fr">Au téléphone, au milieu du magasin.</span><span data-lang="en">Phoned in from the middle of the shop.</span></p>
+        <h3><span data-lang="fr">Plus de « on en a encore ? »</span><span data-lang="en">No more "do we still have any?"</span><span data-lang="mg">Tsy misy « mbola misy ve ? » intsony</span></h3>
+        <p><span data-lang="fr">Au téléphone, au milieu du magasin.</span><span data-lang="en">Phoned in from the middle of the shop.</span><span data-lang="mg">An-telefaonina, eo afovoan'ny magazay.</span></p>
       </div>
     </div>
   </section>
@@ -309,9 +317,9 @@ html{scroll-behavior:auto}
 
     <div class="feature">
       <div class="copy reveal">
-        <div class="eyebrow"><span data-lang="fr">Scanner</span><span data-lang="en">Scanning</span></div>
-        <h3><span data-lang="fr">Scannez, rangez, c'est fait</span><span data-lang="en">Scan, place, done</span></h3>
-        <p><span data-lang="fr">Scannez un code-barres : le nom et la catégorie du produit sont récupérés automatiquement. Indiquez la quantité et l'emplacement, ajoutez une photo si vous voulez. C'est tout.</span><span data-lang="en">Scan a barcode and the product name and category are filled in for you. Set the quantity and the spot, add a photo if you like. That's the whole flow.</span></p>
+        <div class="eyebrow"><span data-lang="fr">Scanner</span><span data-lang="en">Scanning</span><span data-lang="mg">Skanera</span></div>
+        <h3><span data-lang="fr">Scannez, rangez, c'est fait</span><span data-lang="en">Scan, place, done</span><span data-lang="mg">Skano, atsofohy, vita</span></h3>
+        <p><span data-lang="fr">Scannez un code-barres : le nom et la catégorie du produit sont récupérés automatiquement. Indiquez la quantité et l'emplacement, ajoutez une photo si vous voulez. C'est tout.</span><span data-lang="en">Scan a barcode and the product name and category are filled in for you. Set the quantity and the spot, add a photo if you like. That's the whole flow.</span><span data-lang="mg">Skano ny barcode: raisina ho azy ny anarana sy ny sokajin'ny vokatra. Asio ny isa sy ny toerana, ampio sary raha tianao. Izay ihany.</span></p>
       </div>
       <div class="shot reveal" style="--i:1">
         <div class="phone" data-parallax="0.04"><img src="assets/shots/scan.png" alt="Scan d'un code-barres" width="300" height="651" loading="lazy"></div>
@@ -323,25 +331,25 @@ html{scroll-behavior:auto}
         <div class="phone flip" data-parallax="0.04"><img src="assets/shots/locations.png" alt="Mes emplacements" width="300" height="651" loading="lazy"></div>
       </div>
       <div class="copy reveal" style="--i:1">
-        <div class="eyebrow"><span data-lang="fr">Emplacements</span><span data-lang="en">Locations</span></div>
-        <h3><span data-lang="fr">Votre logement, tel qu'il est</span><span data-lang="en">Your home, as it actually is</span></h3>
-        <p><span data-lang="fr">Créez vos pièces, vos meubles et vos emplacements. Prenez une photo d'un meuble et délimitez ses zones directement dessus. Un déplacement d'article se fait en deux gestes et reste dans l'historique.</span><span data-lang="en">Create your rooms, furniture and storage spots. Photograph a piece of furniture and mark out its zones directly on the picture. Moving an item takes two taps and stays in the history.</span></p>
+        <div class="eyebrow"><span data-lang="fr">Emplacements</span><span data-lang="en">Locations</span><span data-lang="mg">Toerana</span></div>
+        <h3><span data-lang="fr">Votre logement, tel qu'il est</span><span data-lang="en">Your home, as it actually is</span><span data-lang="mg">Ny tranonao, araka ny maha izy azy</span></h3>
+        <p><span data-lang="fr">Créez vos pièces, vos meubles et vos emplacements. Prenez une photo d'un meuble et délimitez ses zones directement dessus. Un déplacement d'article se fait en deux gestes et reste dans l'historique.</span><span data-lang="en">Create your rooms, furniture and storage spots. Photograph a piece of furniture and mark out its zones directly on the picture. Moving an item takes two taps and stays in the history.</span><span data-lang="mg">Forony ny efitranonao, ny fanakao ary ny toerana fitehirizana. Alao sary ny fanaka iray, dia faritano mivantana eo amin'ny sary ny faritra. Fikitihana indroa monja no amindrana entana, ary voatahiry ao amin'ny tantara izany.</span></p>
         <p class="muted" style="display:flex;align-items:center;gap:6px;font-size:var(--body-small-size)">
           <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px" aria-hidden="true"><use href="#i-pin"/></svg>
-          Cuisine · placard du haut à gauche · 2 sur 6
+          <span data-lang="fr">Cuisine · placard du haut à gauche · 2 sur 6</span><span data-lang="en">Kitchen · top left cupboard · 2 of 6</span><span data-lang="mg">Lakozia · lalimoara ambony ankavia · 2 amin'ny 6</span>
         </p>
       </div>
     </div>
 
     <div class="feature">
       <div class="copy reveal">
-        <div class="eyebrow"><span data-lang="fr">Alertes</span><span data-lang="en">Alerts</span></div>
-        <h3><span data-lang="fr">Ce qui manque, ce qui va tourner</span><span data-lang="en">What's running out, what's turning</span></h3>
-        <p><span data-lang="fr">Définissez un seuil minimum par produit. Stokky signale ce qui manque et ce qui approche de sa date de péremption, sur un tableau de bord unique. Ce qui passe sous son seuil arrive automatiquement dans la liste de courses.</span><span data-lang="en">Set a minimum threshold per product. Stokky surfaces what is running out and what is nearing its expiry date, on a single dashboard. Anything below its threshold lands on the shopping list automatically.</span></p>
+        <div class="eyebrow"><span data-lang="fr">Alertes</span><span data-lang="en">Alerts</span><span data-lang="mg">Fampandrenesana</span></div>
+        <h3><span data-lang="fr">Ce qui manque, ce qui va tourner</span><span data-lang="en">What's running out, what's turning</span><span data-lang="mg">Izay lany, izay efa ho simba</span></h3>
+        <p><span data-lang="fr">Définissez un seuil minimum par produit. Stokky signale ce qui manque et ce qui approche de sa date de péremption, sur un tableau de bord unique. Ce qui passe sous son seuil arrive automatiquement dans la liste de courses.</span><span data-lang="en">Set a minimum threshold per product. Stokky surfaces what is running out and what is nearing its expiry date, on a single dashboard. Anything below its threshold lands on the shopping list automatically.</span><span data-lang="mg">Faritano ny fetra ambany indrindra isaky ny vokatra. Asehon'i Stokky amin'ny takelaka tokana izay efa ho lany sy izay manakaiky ny daty fahalaniana. Izay midina ambanin'ny fetrany dia miditra ho azy ao amin'ny lisi-panjifana.</span></p>
         <div class="chips">
-          <span class="badge warning pop" style="--i:0"><span data-lang="fr">Bientôt périmé</span><span data-lang="en">Expiring soon</span></span>
-          <span class="badge success pop" style="--i:1"><span data-lang="fr">En stock</span><span data-lang="en">In stock</span></span>
-          <span class="badge error pop" style="--i:2"><span data-lang="fr">Périmé</span><span data-lang="en">Expired</span></span>
+          <span class="badge warning pop" style="--i:0"><span data-lang="fr">Bientôt périmé</span><span data-lang="en">Expiring soon</span><span data-lang="mg">Efa ho lany daty</span></span>
+          <span class="badge success pop" style="--i:1"><span data-lang="fr">En stock</span><span data-lang="en">In stock</span><span data-lang="mg">Misy</span></span>
+          <span class="badge error pop" style="--i:2"><span data-lang="fr">Périmé</span><span data-lang="en">Expired</span><span data-lang="mg">Lany daty</span></span>
         </div>
       </div>
       <div class="shot reveal" style="--i:1">
@@ -354,9 +362,9 @@ html{scroll-behavior:auto}
         <div class="phone flip" data-parallax="0.04"><img src="assets/shots/shopping.png" alt="Liste de courses" width="300" height="651" loading="lazy"></div>
       </div>
       <div class="copy reveal" style="--i:1">
-        <div class="eyebrow"><span data-lang="fr">Courses</span><span data-lang="en">Shopping</span></div>
-        <h3><span data-lang="fr">Une liste qui se remplit seule</span><span data-lang="en">A list that fills itself</span></h3>
-        <p><span data-lang="fr">Ajoutez le reste à la main, cochez au fur et à mesure. Tout le foyer voit la même liste, mise à jour en temps réel.</span><span data-lang="en">Add the rest by hand and tick things off as you go. The whole household sees the same list, updated live.</span></p>
+        <div class="eyebrow"><span data-lang="fr">Courses</span><span data-lang="en">Shopping</span><span data-lang="mg">Fanjifana</span></div>
+        <h3><span data-lang="fr">Une liste qui se remplit seule</span><span data-lang="en">A list that fills itself</span><span data-lang="mg">Lisitra mifeno ho azy</span></h3>
+        <p><span data-lang="fr">Ajoutez le reste à la main, cochez au fur et à mesure. Tout le foyer voit la même liste, mise à jour en temps réel.</span><span data-lang="en">Add the rest by hand and tick things off as you go. The whole household sees the same list, updated live.</span><span data-lang="mg">Ampio an-tanana ny sisa, dia mariho arakaraka ny fandehany. Mahita lisitra mitovy, mihavao eo no ho eo, ny ankohonana manontolo.</span></p>
       </div>
     </div>
 
@@ -366,50 +374,50 @@ html{scroll-behavior:auto}
     <div class="wrap values">
       <div class="value reveal">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-group"/></svg>
-        <h3><span data-lang="fr">À plusieurs</span><span data-lang="en">Together</span></h3>
-        <p><span data-lang="fr">Invitez les personnes de votre foyer. Tout le monde voit le même inventaire, mis à jour en temps réel. L'historique indique qui a fait quoi.</span><span data-lang="en">Invite the people you live with. Everyone sees the same inventory, updated live. The history shows who did what.</span></p>
+        <h3><span data-lang="fr">À plusieurs</span><span data-lang="en">Together</span><span data-lang="mg">Miaraka</span></h3>
+        <p><span data-lang="fr">Invitez les personnes de votre foyer. Tout le monde voit le même inventaire, mis à jour en temps réel. L'historique indique qui a fait quoi.</span><span data-lang="en">Invite the people you live with. Everyone sees the same inventory, updated live. The history shows who did what.</span><span data-lang="mg">Asao ny olona iray trano aminao. Mahita lisitra mitovy, mihavao eo no ho eo, ny rehetra. Asehon'ny tantara hoe iza no nanao inona.</span></p>
       </div>
       <div class="value reveal" style="--i:1">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>
-        <h3><span data-lang="fr">Sans compte, sans réseau</span><span data-lang="en">No account, no signal</span></h3>
-        <p><span data-lang="fr">Stokky démarre immédiatement, sans inscription. Vos données restent sur votre appareil tant que vous ne créez pas de compte. L'application fonctionne hors ligne et se synchronise quand la connexion revient.</span><span data-lang="en">Stokky starts straight away, no sign-up. Your data stays on your device until you choose to create an account. It works offline and syncs when the connection comes back.</span></p>
+        <h3><span data-lang="fr">Sans compte, sans réseau</span><span data-lang="en">No account, no signal</span><span data-lang="mg">Tsy mila kaonty, tsy mila aterineto</span></h3>
+        <p><span data-lang="fr">Stokky démarre immédiatement, sans inscription. Vos données restent sur votre appareil tant que vous ne créez pas de compte. L'application fonctionne hors ligne et se synchronise quand la connexion revient.</span><span data-lang="en">Stokky starts straight away, no sign-up. Your data stays on your device until you choose to create an account. It works offline and syncs when the connection comes back.</span><span data-lang="mg">Miditra avy hatrany i Stokky, tsy mila misoratra anarana. Mijanona ao amin'ny finday-nao ny angonao raha tsy mbola mamorona kaonty ianao. Miasa tsy misy aterineto ny rindranasa, ary mifanaraka rehefa tafaverina ny fifandraisana.</span></p>
       </div>
       <div class="value reveal" style="--i:2">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg>
-        <h3><span data-lang="fr">Respectueux de vos données</span><span data-lang="en">Respectful of your data</span></h3>
-        <p><span data-lang="fr">Aucune publicité. Aucun outil de mesure d'audience. Aucun traceur. Nous ne vendons rien à personne. L'appareil photo sert uniquement à scanner un code-barres et à prendre vos photos.</span><span data-lang="en">No ads. No analytics. No trackers. We sell nothing to anyone. The camera is used only to scan barcodes and take your own photos.</span></p>
+        <h3><span data-lang="fr">Respectueux de vos données</span><span data-lang="en">Respectful of your data</span><span data-lang="mg">Manaja ny angonao</span></h3>
+        <p><span data-lang="fr">Aucune publicité. Aucun outil de mesure d'audience. Aucun traceur. Nous ne vendons rien à personne. L'appareil photo sert uniquement à scanner un code-barres et à prendre vos photos.</span><span data-lang="en">No ads. No analytics. No trackers. We sell nothing to anyone. The camera is used only to scan barcodes and take your own photos.</span><span data-lang="mg">Tsy misy dokambarotra. Tsy misy fitaovana fandrefesana mpitsidika. Tsy misy mpanaraka. Tsy mivarotra na inona na inona amin'iza na iza izahay. Ny fakantsary dia ampiasaina fotsiny handinihana barcode sy haka ny sarinao.</span></p>
       </div>
     </div>
     <div class="wrap stats">
       <div class="stat reveal" style="--i:0">
         <span class="tile"><svg class="icon" viewBox="0 0 24 24" style="width:20px;height:20px" aria-hidden="true"><use href="#i-hexagon"/></svg></span>
         <span class="n" data-count="0">0</span>
-        <span class="l"><span data-lang="fr">Publicités</span><span data-lang="en">Ads</span></span>
+        <span class="l"><span data-lang="fr">Publicités</span><span data-lang="en">Ads</span><span data-lang="mg">Dokambarotra</span></span>
       </div>
       <div class="stat reveal" style="--i:1">
         <span class="tile"><svg class="icon" viewBox="0 0 24 24" style="width:20px;height:20px" aria-hidden="true"><use href="#i-label"/></svg></span>
         <span class="n" data-count="0">0</span>
-        <span class="l"><span data-lang="fr">Traceurs</span><span data-lang="en">Trackers</span></span>
+        <span class="l"><span data-lang="fr">Traceurs</span><span data-lang="en">Trackers</span><span data-lang="mg">Mpanaraka</span></span>
       </div>
       <div class="stat reveal" style="--i:2">
         <span class="tile"><svg class="icon" viewBox="0 0 24 24" style="width:20px;height:20px" aria-hidden="true"><use href="#i-download"/></svg></span>
         <span class="n" data-count="0">0</span>
-        <span class="l"><span data-lang="fr">Revente de données</span><span data-lang="en">Data resold</span></span>
+        <span class="l"><span data-lang="fr">Revente de données</span><span data-lang="en">Data resold</span><span data-lang="mg">Angona amidy</span></span>
       </div>
       <div class="stat neutral reveal" style="--i:3">
         <span class="tile"><svg class="icon" viewBox="0 0 24 24" style="width:20px;height:20px" aria-hidden="true"><use href="#i-category"/></svg></span>
         <span class="n" data-count="2">0</span>
-        <span class="l"><span data-lang="fr">Langues</span><span data-lang="en">Languages</span></span>
+        <span class="l"><span data-lang="fr">Langues</span><span data-lang="en">Languages</span><span data-lang="mg">Fiteny</span></span>
       </div>
     </div>
   </section>
 
   <section class="wrap closing">
-    <h2 class="reveal"><span data-lang="fr">Vous ne cherchez plus, vous savez.</span><span data-lang="en">You stop searching and start knowing.</span></h2>
-    <p class="reveal" style="--i:1"><span data-lang="fr">Stokky arrive bientôt sur Android et iOS, en français et en anglais.</span><span data-lang="en">Stokky is coming soon to Android and iOS, in French and English.</span></p>
+    <h2 class="reveal"><span data-lang="fr">Vous ne cherchez plus, vous savez.</span><span data-lang="en">You stop searching and start knowing.</span><span data-lang="mg">Tsy mikaroka intsony ianao, fa mahafantatra.</span></h2>
+    <p class="reveal" style="--i:1"><span data-lang="fr">Stokky arrive bientôt sur Android et iOS, en français et en anglais.</span><span data-lang="en">Stokky is coming soon to Android and iOS, in French and English.</span><span data-lang="mg">Ho avy tsy ho ela amin'ny Android sy iOS i Stokky, amin'ny teny frantsay sy anglisy.</span></p>
     <button class="btn reveal" style="--i:2" type="button" disabled>
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg>
-      <span data-lang="fr">Bientôt disponible</span><span data-lang="en">Coming soon</span>
+      <span data-lang="fr">Bientôt disponible</span><span data-lang="en">Coming soon</span><span data-lang="mg">Ho avy tsy ho ela</span>
     </button>
   </section>
 
@@ -421,10 +429,10 @@ html{scroll-behavior:auto}
       <img src="assets/icon.png" alt="" width="24" height="24">
       <span>Stokky · 2026</span>
     </span>
-    <a href="https://andryhenintsoa.github.io/stokky-legal/"><span data-lang="fr">Confidentialité</span><span data-lang="en">Privacy</span></a>
+    <a href="https://andryhenintsoa.github.io/stokky-legal/"><span data-lang="fr">Confidentialité</span><span data-lang="en">Privacy</span><span data-lang="mg">Tsiambaratelo</span></a>
     <a href="mailto:andryhenintsoa@outlook.com">andryhenintsoa@outlook.com</a>
     <span class="muted" style="font-size:var(--body-small-size)">
-      <span data-lang="fr">Données produits : Open Food Facts</span><span data-lang="en">Product data: Open Food Facts</span>
+      <span data-lang="fr">Données produits : Open Food Facts</span><span data-lang="en">Product data: Open Food Facts</span><span data-lang="mg">Angona momba ny vokatra: Open Food Facts</span>
     </span>
   </div>
 </footer>
@@ -435,15 +443,16 @@ html{scroll-behavior:auto}
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---- language ---- */
+  var LANGS = ['fr', 'en', 'mg'];
   function setLang(l) {
-    root.classList.toggle('lang-fr', l === 'fr');
-    root.classList.toggle('lang-en', l === 'en');
+    if (LANGS.indexOf(l) < 0) l = 'fr';
+    LANGS.forEach(function (c) { root.classList.toggle('lang-' + c, c === l); });
     root.lang = l;
     try { localStorage.setItem('stokky-lang', l); } catch (e) {}
   }
   var stored = null;
   try { stored = localStorage.getItem('stokky-lang'); } catch (e) {}
-  setLang(stored || ((navigator.language || 'fr').slice(0, 2) === 'en' ? 'en' : 'fr'));
+  setLang(stored || (navigator.language || 'fr').slice(0, 2).toLowerCase());
   document.querySelectorAll('.langs button').forEach(function (b) {
     b.addEventListener('click', function () { setLang(b.dataset.set); });
   });
