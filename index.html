@@ -279,7 +279,7 @@ html{scroll-behavior:auto}
       </div>
       <div class="shot reveal" style="--i:2">
         <div class="phone" data-parallax="0.05">
-          <img src="assets/shots/dashboard.png" alt="Tableau de bord Stokky" width="320" height="694" loading="eager">
+          <img src="assets/shots/fr/dashboard.png" data-shot="dashboard" alt="Tableau de bord Stokky" data-alt-fr="Tableau de bord Stokky" data-alt-en="Stokky dashboard" data-alt-mg="Takelaka Stokky" width="320" height="694" loading="eager">
         </div>
       </div>
     </div>
@@ -322,13 +322,13 @@ html{scroll-behavior:auto}
         <p><span data-lang="fr">Scannez un code-barres : le nom et la catégorie du produit sont récupérés automatiquement. Indiquez la quantité et l'emplacement, ajoutez une photo si vous voulez. C'est tout.</span><span data-lang="en">Scan a barcode and the product name and category are filled in for you. Set the quantity and the spot, add a photo if you like. That's the whole flow.</span><span data-lang="mg">Skano ny barcode: raisina ho azy ny anarana sy ny sokajin'ny vokatra. Asio ny isa sy ny toerana, ampio sary raha tianao. Izay ihany.</span></p>
       </div>
       <div class="shot reveal" style="--i:1">
-        <div class="phone" data-parallax="0.04"><img src="assets/shots/scan.png" alt="Scan d'un code-barres" width="300" height="651" loading="lazy"></div>
+        <div class="phone" data-parallax="0.04"><img src="assets/shots/fr/scan.png" data-shot="scan" alt="Scan d'un code-barres" data-alt-fr="Scan d'un code-barres" data-alt-en="Scanning a barcode" data-alt-mg="Fanaovana skanera barcode" width="300" height="651" loading="lazy"></div>
       </div>
     </div>
 
     <div class="feature">
       <div class="shot reveal">
-        <div class="phone flip" data-parallax="0.04"><img src="assets/shots/locations.png" alt="Mes emplacements" width="300" height="651" loading="lazy"></div>
+        <div class="phone flip" data-parallax="0.04"><img src="assets/shots/fr/locations.png" data-shot="locations" alt="Mes emplacements" data-alt-fr="Mes emplacements" data-alt-en="My locations" data-alt-mg="Ny fitoerako" width="300" height="651" loading="lazy"></div>
       </div>
       <div class="copy reveal" style="--i:1">
         <div class="eyebrow"><span data-lang="fr">Emplacements</span><span data-lang="en">Locations</span><span data-lang="mg">Toerana</span></div>
@@ -353,13 +353,13 @@ html{scroll-behavior:auto}
         </div>
       </div>
       <div class="shot reveal" style="--i:1">
-        <div class="phone" data-parallax="0.04"><img src="assets/shots/add-stock.png" alt="Ajouter du stock" width="300" height="651" loading="lazy"></div>
+        <div class="phone" data-parallax="0.04"><img src="assets/shots/fr/add-stock.png" data-shot="add-stock" alt="Ajouter du stock" data-alt-fr="Ajouter du stock" data-alt-en="Adding stock" data-alt-mg="Fampidirana entana" width="300" height="651" loading="lazy"></div>
       </div>
     </div>
 
     <div class="feature">
       <div class="shot reveal">
-        <div class="phone flip" data-parallax="0.04"><img src="assets/shots/shopping.png" alt="Liste de courses" width="300" height="651" loading="lazy"></div>
+        <div class="phone flip" data-parallax="0.04"><img src="assets/shots/fr/shopping.png" data-shot="shopping" alt="Liste de courses" data-alt-fr="Liste de courses" data-alt-en="Shopping list" data-alt-mg="Lisitry ny ho vidiana" width="300" height="651" loading="lazy"></div>
       </div>
       <div class="copy reveal" style="--i:1">
         <div class="eyebrow"><span data-lang="fr">Courses</span><span data-lang="en">Shopping</span><span data-lang="mg">Fanjifana</span></div>
@@ -444,10 +444,17 @@ html{scroll-behavior:auto}
 
   /* ---- language ---- */
   var LANGS = ['fr', 'en', 'mg'];
+  var shots = document.querySelectorAll('img[data-shot]');
   function setLang(l) {
     if (LANGS.indexOf(l) < 0) l = 'fr';
     LANGS.forEach(function (c) { root.classList.toggle('lang-' + c, c === l); });
     root.lang = l;
+    /* The screenshots are rendered per language, same five names under
+       assets/shots/<lang>/. */
+    shots.forEach(function (img) {
+      img.src = 'assets/shots/' + l + '/' + img.dataset.shot + '.png';
+      img.alt = img.dataset['alt' + l.charAt(0).toUpperCase() + l.slice(1)];
+    });
     try { localStorage.setItem('stokky-lang', l); } catch (e) {}
   }
   var stored = null;
